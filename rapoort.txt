@@ -1,0 +1,18 @@
+PS C:\Users\Abdelaziz Boulbaz\CascadeProjects\secure_messenger> git push -u origin main
+Enumerating objects: 209, done.
+Counting objects: 100% (209/209), done.
+Delta compression using up to 4 threads
+Compressing objects: 100% (178/178), done.
+Writing objects: 100% (209/209), 948.73 MiB | 4.02 MiB/s, done.
+Total 209 (delta 21), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (21/21), done.
+remote: error: Trace: 44316838f5cc32b6de53f3ef648e50930b9cc9d9207e14e3c04fbbc51cce0f20
+remote: error: See https://gh.io/lfs for more information.
+remote: error: File flutter_windows_3.19.0-stable.zip is 953.15 MB; this exceeds GitHub's file size limit of 100.00 MB
+remote: error: GH001: Large files detected. You may want to try Git Large File Storage - https://git-lfs.github.com.
+To https://github.com/OrkeyBelleva/secure_messenger.git
+ ! [remote rejected] main -> main (pre-receive hook declined)
+error: failed to push some refs to 'https://github.com/OrkeyBelleva/secure_messenger.git'
+PS C:\Users\Abdelaziz Boulbaz\CascadeProjects\secure_messenger> git remote -v
+origin  https://github.com/OrkeyBelleva/secure_messenger.git (fetch)
+origin  https://github.com/OrkeyBelleva/secure_messenger.git (push)
