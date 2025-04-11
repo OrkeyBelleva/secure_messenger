@@ -56,11 +56,7 @@ add_subdirectory("runner")
 # Generated plugin build rules, which manage building the plugins and adding
 # them to the application.
 include(flutter/generated_plugins.cmake)
-# Firebase
-add_subdirectory(${FLUTTER_EPHEMERAL_DIR}/.plugin_symlinks/firebase_core/windows)
-add_subdirectory(${FLUTTER_EPHEMERAL_DIR}/.plugin_symlinks/firebase_auth/windows)
-add_subdirectory(${FLUTTER_EPHEMERAL_DIR}/.plugin_symlinks/firebase_storage/windows)
-add_subdirectory(${FLUTTER_EPHEMERAL_DIR}/.plugin_symlinks/firebase_firestore/windows)
+
 
 # === Installation ===
 # Support files are copied into place next to the executable, so that it can

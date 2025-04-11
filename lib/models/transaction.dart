@@ -59,9 +59,8 @@ class Transaction {
       'dateCreation': Timestamp.fromDate(dateCreation),
       'dateMiseAJour': Timestamp.fromDate(dateMiseAJour),
       'validateurId': validateurId,
-      'dateValidation': dateValidation != null
-          ? Timestamp.fromDate(dateValidation!)
-          : null,
+      'dateValidation':
+          dateValidation != null ? Timestamp.fromDate(dateValidation!) : null,
       'commentaireValidation': commentaireValidation,
     };
   }
@@ -81,7 +80,7 @@ class Transaction {
     String? commentaireValidation,
   }) {
     return Transaction(
-      id: this.id,
+      id: id,
       expediteurId: expediteurId ?? this.expediteurId,
       destinataireId: destinataireId ?? this.destinataireId,
       type: type ?? this.type,
@@ -92,7 +91,8 @@ class Transaction {
       dateMiseAJour: dateMiseAJour ?? this.dateMiseAJour,
       validateurId: validateurId ?? this.validateurId,
       dateValidation: dateValidation ?? this.dateValidation,
-      commentaireValidation: commentaireValidation ?? this.commentaireValidation,
+      commentaireValidation:
+          commentaireValidation ?? this.commentaireValidation,
     );
   }
 

@@ -5,9 +5,9 @@ class Role {
   static const String admin = 'administrateur';
   static const String moderateur = 'moderateur';
   static const String utilisateur = 'utilisateur';
-  
+
   static List<String> tousLesRoles = [admin, moderateur, utilisateur];
-  
+
   static Map<String, List<String>> permissions = {
     admin: [
       'gerer_utilisateurs',
@@ -41,7 +41,7 @@ class UtilisateurService {
       });
     } catch (e) {
       print('Erreur lors de la création de l\'utilisateur: $e');
-      throw e;
+      rethrow;
     }
   }
 
@@ -53,7 +53,7 @@ class UtilisateurService {
       return Utilisateur.fromJson(doc.data()!);
     } catch (e) {
       print('Erreur lors de la récupération de l\'utilisateur: $e');
-      throw e;
+      rethrow;
     }
   }
 
@@ -68,20 +68,17 @@ class UtilisateurService {
       });
     } catch (e) {
       print('Erreur lors de la mise à jour du rôle: $e');
-      throw e;
+      rethrow;
     }
   }
 
   // Obtenir tous les utilisateurs
   Stream<List<Utilisateur>> getTousLesUtilisateurs() {
-    return _db
-        .collection('utilisateurs')
-        .snapshots()
-        .map((snapshot) {
-          return snapshot.docs
-              .map((doc) => Utilisateur.fromJson(doc.data()))
-              .toList();
-        });
+    return _db.collection('utilisateurs').snapshots().map((snapshot) {
+      return snapshot.docs
+          .map((doc) => Utilisateur.fromJson(doc.data()))
+          .toList();
+    });
   }
 
   // Vérifier si un utilisateur a une permission spécifique
@@ -98,7 +95,7 @@ class UtilisateurService {
       });
     } catch (e) {
       print('Erreur lors de la désactivation du compte: $e');
-      throw e;
+      rethrow;
     }
   }
 
@@ -110,12 +107,13 @@ class UtilisateurService {
       });
     } catch (e) {
       print('Erreur lors de la réactivation du compte: $e');
-      throw e;
+      rethrow;
     }
   }
 
   // Mettre à jour le profil utilisateur
-  Future<void> mettreAJourProfil(String userId, {
+  Future<void> mettreAJourProfil(
+    String userId, {
     String? nom,
     String? email,
     String? photoUrl,
@@ -129,7 +127,7 @@ class UtilisateurService {
       await _db.collection('utilisateurs').doc(userId).update(updates);
     } catch (e) {
       print('Erreur lors de la mise à jour du profil: $e');
-      throw e;
+      rethrow;
     }
   }
 
@@ -139,7 +137,7 @@ class UtilisateurService {
       final resultat = await _db
           .collection('utilisateurs')
           .where('nom', isGreaterThanOrEqualTo: query)
-          .where('nom', isLessThan: query + 'z')
+          .where('nom', isLessThan: '${query}z')
           .get();
 
       return resultat.docs
@@ -147,7 +145,7 @@ class UtilisateurService {
           .toList();
     } catch (e) {
       print('Erreur lors de la recherche d\'utilisateurs: $e');
-      throw e;
+      rethrow;
     }
   }
 
@@ -176,7 +174,7 @@ class UtilisateurService {
       };
     } catch (e) {
       print('Erreur lors de la récupération des statistiques: $e');
-      throw e;
+      rethrow;
     }
   }
 }

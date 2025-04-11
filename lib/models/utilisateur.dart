@@ -20,14 +20,7 @@ class Utilisateur {
     required this.dateCreation,
   });
 
-  factory Utilisateur.fromJson(Map<String, dynamic> json) => _$UtilisateurFromJson(json);
+  factory Utilisateur.fromJson(Map<String, dynamic> json) =>
+      _$UtilisateurFromJson(json);
   Map<String, dynamic> toJson() => _$UtilisateurToJson(this);
-
-  bool peutValiderTransaction() {
-    return role == 'administrateur';
-  }
-
-  bool estMemberDuGroupe(String groupeId) {
-    return groupes.contains(groupeId);
-  }
 }

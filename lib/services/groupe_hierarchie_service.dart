@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/groupe.dart';
 import '../models/membre.dart';
-import '../models/role.dart';
 
 class GroupeHierarchieService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -26,7 +25,7 @@ class GroupeHierarchieService {
     );
 
     final docRef = await _db.collection('groupes').add(groupe.toMap());
-    
+
     // Ajouter le créateur comme administrateur
     await ajouterMembre(
       groupeId: docRef.id,
@@ -120,8 +119,10 @@ class GroupeHierarchieService {
         .where('estActif', isEqualTo: true)
         .snapshots()
         .asyncMap((membresSnapshot) async {
-      final groupeIds = membresSnapshot.docs.map((doc) => doc.data()['groupeId'] as String).toList();
-      
+      final groupeIds = membresSnapshot.docs
+          .map((doc) => doc.data()['groupeId'] as String)
+          .toList();
+
       if (groupeIds.isEmpty) return [];
 
       final groupesSnapshot = await _db
@@ -250,10 +251,8 @@ class GroupeHierarchieService {
     String? currentGroupeId = groupeId;
 
     while (currentGroupeId != null) {
-      final snapshot = await _db
-          .collection('groupes')
-          .doc(currentGroupeId)
-          .get();
+      final snapshot =
+          await _db.collection('groupes').doc(currentGroupeId).get();
 
       if (!snapshot.exists) break;
 

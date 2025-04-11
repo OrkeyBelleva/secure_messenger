@@ -7,7 +7,7 @@ class AuthService {
   // Convertir User Firebase en notre modèle Utilisateur
   Utilisateur? _userFromFirebase(User? user) {
     if (user == null) return null;
-    
+
     return Utilisateur(
       id: user.uid,
       email: user.email ?? '',
@@ -38,16 +38,17 @@ class AuthService {
   }
 
   // Inscription avec email et mot de passe
-  Future<Utilisateur?> inscription(String email, String password, String nom) async {
+  Future<Utilisateur?> inscription(
+      String email, String password, String nom) async {
     try {
       final result = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
-      
+
       // Mettre à jour le nom d'affichage
       await result.user?.updateDisplayName(nom);
-      
+
       return _userFromFirebase(result.user);
     } catch (e) {
       print('Erreur d\'inscription: $e');

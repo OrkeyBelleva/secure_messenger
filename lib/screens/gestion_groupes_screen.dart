@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../services/groupe_hierarchie_service.dart';
 import '../models/groupe.dart';
 import '../models/membre.dart';
-import '../models/role.dart';
 import '../models/utilisateur.dart';
 
 class GestionGroupesScreen extends StatefulWidget {
@@ -98,7 +97,7 @@ class _GestionGroupesScreenState extends State<GestionGroupesScreen> {
           builder: (context, snapshot) {
             final role = snapshot.data;
             if (role == 'administrateur') {
-              return ButtonBar(
+              return OverflowBar(
                 children: [
                   TextButton(
                     onPressed: () => _modifierGroupe(groupe),
@@ -265,7 +264,7 @@ class _DialogueNouveauGroupeState extends State<DialogueNouveauGroupe> {
   final _formKey = GlobalKey<FormState>();
   String _nom = '';
   String _description = '';
-  List<String> _roles = ['membre'];
+  final List<String> _roles = ['membre'];
   String? _groupeParentId;
 
   @override

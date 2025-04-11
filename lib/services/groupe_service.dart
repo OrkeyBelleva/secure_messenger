@@ -11,7 +11,7 @@ class GroupeService {
       return docRef.id;
     } catch (e) {
       print('Erreur lors de la création du groupe: $e');
-      throw e;
+      rethrow;
     }
   }
 
@@ -22,10 +22,8 @@ class GroupeService {
         .where('membres', arrayContains: userId)
         .snapshots()
         .map((snapshot) {
-          return snapshot.docs
-              .map((doc) => Groupe.fromJson(doc.data()))
-              .toList();
-        });
+      return snapshot.docs.map((doc) => Groupe.fromJson(doc.data())).toList();
+    });
   }
 
   // Ajouter un membre au groupe
@@ -36,7 +34,7 @@ class GroupeService {
       });
     } catch (e) {
       print('Erreur lors de l\'ajout du membre: $e');
-      throw e;
+      rethrow;
     }
   }
 
@@ -48,7 +46,7 @@ class GroupeService {
       });
     } catch (e) {
       print('Erreur lors du retrait du membre: $e');
-      throw e;
+      rethrow;
     }
   }
 
@@ -58,7 +56,7 @@ class GroupeService {
       await _db.collection('groupes').doc(groupeId).delete();
     } catch (e) {
       print('Erreur lors de la suppression du groupe: $e');
-      throw e;
+      rethrow;
     }
   }
 
@@ -69,9 +67,7 @@ class GroupeService {
         .where('type', isEqualTo: type)
         .snapshots()
         .map((snapshot) {
-          return snapshot.docs
-              .map((doc) => Groupe.fromJson(doc.data()))
-              .toList();
-        });
+      return snapshot.docs.map((doc) => Groupe.fromJson(doc.data())).toList();
+    });
   }
 }

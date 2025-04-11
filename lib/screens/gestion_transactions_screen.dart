@@ -12,7 +12,8 @@ class GestionTransactionsScreen extends StatefulWidget {
   });
 
   @override
-  State<GestionTransactionsScreen> createState() => _GestionTransactionsScreenState();
+  State<GestionTransactionsScreen> createState() =>
+      _GestionTransactionsScreenState();
 }
 
 class _GestionTransactionsScreenState extends State<GestionTransactionsScreen>
@@ -253,7 +254,7 @@ class _GestionTransactionsScreenState extends State<GestionTransactionsScreen>
             title: Text('Transaction ${transaction.id}'),
             subtitle: Text('Type: ${transaction.type}'),
           ),
-          ButtonBar(
+          OverflowBar(
             children: [
               TextButton(
                 onPressed: () => _afficherDetailsTransaction(transaction),
@@ -319,7 +320,8 @@ class _GestionTransactionsScreenState extends State<GestionTransactionsScreen>
     final commentaire = await showDialog<String>(
       context: context,
       builder: (context) => DialogueCommentaire(
-        titre: estApprouve ? 'Approuver la transaction' : 'Refuser la transaction',
+        titre:
+            estApprouve ? 'Approuver la transaction' : 'Refuser la transaction',
       ),
     );
 
@@ -367,7 +369,8 @@ class DialogueNouvelleTransaction extends StatefulWidget {
       _DialogueNouvelleTransactionState();
 }
 
-class _DialogueNouvelleTransactionState extends State<DialogueNouvelleTransaction> {
+class _DialogueNouvelleTransactionState
+    extends State<DialogueNouvelleTransaction> {
   final _formKey = GlobalKey<FormState>();
   String _destinataireId = '';
   String _type = '';

@@ -27,28 +27,28 @@ class Document {
   });
 
   Map<String, dynamic> toJson() => {
-    'id': id,
-    'nom': nom,
-    'url': url,
-    'type': type,
-    'date': date.toIso8601String(),
-    'prix': prix,
-    'numeroDoc': numeroDoc,
-    'proprietaireId': proprietaireId,
-    'estValide': estValide,
-  };
+        'id': id,
+        'nom': nom,
+        'url': url,
+        'type': type,
+        'date': date.toIso8601String(),
+        'prix': prix,
+        'numeroDoc': numeroDoc,
+        'proprietaireId': proprietaireId,
+        'estValide': estValide,
+      };
 
   factory Document.fromJson(Map<String, dynamic> json) => Document(
-    id: json['id'],
-    nom: json['nom'],
-    url: json['url'],
-    type: json['type'],
-    date: DateTime.parse(json['date']),
-    prix: json['prix'],
-    numeroDoc: json['numeroDoc'],
-    proprietaireId: json['proprietaireId'],
-    estValide: json['estValide'],
-  );
+        id: json['id'],
+        nom: json['nom'],
+        url: json['url'],
+        type: json['type'],
+        date: DateTime.parse(json['date']),
+        prix: json['prix'],
+        numeroDoc: json['numeroDoc'],
+        proprietaireId: json['proprietaireId'],
+        estValide: json['estValide'],
+      );
 }
 
 class DocumentService {
@@ -93,7 +93,7 @@ class DocumentService {
       return document;
     } catch (e) {
       print('Erreur lors du téléchargement du document: $e');
-      throw e;
+      rethrow;
     }
   }
 
@@ -104,10 +104,8 @@ class DocumentService {
         .where('proprietaireId', isEqualTo: userId)
         .snapshots()
         .map((snapshot) {
-          return snapshot.docs
-              .map((doc) => Document.fromJson(doc.data()))
-              .toList();
-        });
+      return snapshot.docs.map((doc) => Document.fromJson(doc.data())).toList();
+    });
   }
 
   // Valider un document
@@ -118,7 +116,7 @@ class DocumentService {
       });
     } catch (e) {
       print('Erreur lors de la validation du document: $e');
-      throw e;
+      rethrow;
     }
   }
 
@@ -135,12 +133,13 @@ class DocumentService {
       await _db.collection('documents').doc(documentId).delete();
     } catch (e) {
       print('Erreur lors de la suppression du document: $e');
-      throw e;
+      rethrow;
     }
   }
 
   // Mettre à jour les métadonnées d'un document
-  Future<void> mettreAJourDocument(String documentId, {
+  Future<void> mettreAJourDocument(
+    String documentId, {
     double? prix,
     String? numeroDoc,
   }) async {
@@ -152,7 +151,7 @@ class DocumentService {
       await _db.collection('documents').doc(documentId).update(updates);
     } catch (e) {
       print('Erreur lors de la mise à jour du document: $e');
-      throw e;
+      rethrow;
     }
   }
 
@@ -163,9 +162,7 @@ class DocumentService {
         .where('estValide', isEqualTo: false)
         .snapshots()
         .map((snapshot) {
-          return snapshot.docs
-              .map((doc) => Document.fromJson(doc.data()))
-              .toList();
-        });
+      return snapshot.docs.map((doc) => Document.fromJson(doc.data())).toList();
+    });
   }
 }

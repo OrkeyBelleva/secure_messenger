@@ -46,12 +46,10 @@ class Membre {
       'utilisateurId': utilisateurId,
       'role': role,
       'dateAjout': Timestamp.fromDate(dateAjout),
-      'dateMiseAJour': dateMiseAJour != null
-          ? Timestamp.fromDate(dateMiseAJour!)
-          : null,
-      'dateRetrait': dateRetrait != null
-          ? Timestamp.fromDate(dateRetrait!)
-          : null,
+      'dateMiseAJour':
+          dateMiseAJour != null ? Timestamp.fromDate(dateMiseAJour!) : null,
+      'dateRetrait':
+          dateRetrait != null ? Timestamp.fromDate(dateRetrait!) : null,
       'estActif': estActif,
     };
   }
@@ -67,7 +65,7 @@ class Membre {
     bool? estActif,
   }) {
     return Membre(
-      id: this.id,
+      id: id,
       groupeId: groupeId ?? this.groupeId,
       utilisateurId: utilisateurId ?? this.utilisateurId,
       role: role ?? this.role,

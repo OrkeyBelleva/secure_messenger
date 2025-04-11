@@ -1,68 +1,75 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/message.dart';
+import 'encryption_service.dart';
 
 class MessageService {
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final EncryptionService _encryptionService = EncryptionService();
 
-  // Envoyer un message
-  Future<void> envoyerMessage(Message message) async {
-    try {
-      await _db.collection('messages').add(message.toJson());
-    } catch (e) {
-      print('Erreur d\'envoi du message: $e');
-      throw e;
-    }
-  }
-
-  // Obtenir les messages d'un groupe
   Stream<List<Message>> getMessagesGroupe(String groupeId) {
-    return _db
+    return _firestore
         .collection('messages')
         .where('groupeId', isEqualTo: groupeId)
         .orderBy('dateEnvoi', descending: true)
         .snapshots()
         .map((snapshot) {
-          return snapshot.docs
-              .map((doc) => Message.fromJson(doc.data()))
-              .toList();
-        });
+      return snapshot.docs.map((doc) {
+        final data = doc.data();
+        // Déchiffrer le contenu du message
+        data['contenu'] = _encryptionService.decryptMessage(data['contenu']);
+        return Message.fromJson(data);
+      }).toList();
+    });
   }
 
-  // Obtenir les messages privés entre deux utilisateurs
-  Stream<List<Message>> getMessagesPrives(String userId1, String userId2) {
-    return _db
+  Stream<List<Message>> getMessagesPrives(
+      String expediteurId, String destinataireId) {
+    return _firestore
         .collection('messages')
-        .where('groupeId', isNull: true)
-        .where('expediteurId', whereIn: [userId1, userId2])
-        .where('destinataireId', whereIn: [userId1, userId2])
+        .where('expediteurId', whereIn: [expediteurId, destinataireId])
+        .where('destinataireId', whereIn: [expediteurId, destinataireId])
         .orderBy('dateEnvoi', descending: true)
         .snapshots()
         .map((snapshot) {
-          return snapshot.docs
-              .map((doc) => Message.fromJson(doc.data()))
-              .toList();
+          return snapshot.docs.map((doc) {
+            final data = doc.data();
+            // Déchiffrer le contenu du message
+            data['contenu'] =
+                _encryptionService.decryptMessage(data['contenu']);
+            return Message.fromJson(data);
+          }).toList();
         });
   }
 
-  // Marquer un message comme lu
-  Future<void> marquerCommeLu(String messageId) async {
+  Future<void> envoyerMessage(Message message) async {
     try {
-      await _db.collection('messages').doc(messageId).update({
-        'estLu': true,
-      });
+      // Chiffrer le contenu du message avant l'envoi
+      final messageChiffre = Message(
+        id: message.id,
+        contenu: _encryptionService.encryptMessage(message.contenu),
+        expediteurId: message.expediteurId,
+        groupeId: message.groupeId,
+        destinataireId: message.destinataireId,
+        dateEnvoi: message.dateEnvoi,
+        fichierJoints: message.fichierJoints,
+      );
+
+      await _firestore
+          .collection('messages')
+          .doc(message.id)
+          .set(messageChiffre.toJson());
     } catch (e) {
-      print('Erreur lors du marquage du message: $e');
-      throw e;
+      print('Erreur lors de l\'envoi du message: $e');
+      rethrow;
     }
   }
 
-  // Supprimer un message
   Future<void> supprimerMessage(String messageId) async {
     try {
-      await _db.collection('messages').doc(messageId).delete();
+      await _firestore.collection('messages').doc(messageId).delete();
     } catch (e) {
       print('Erreur lors de la suppression du message: $e');
-      throw e;
+      rethrow;
     }
   }
 }

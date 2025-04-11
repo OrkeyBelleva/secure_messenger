@@ -1,21 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'services/reseau_local_service.dart';
+import 'services/auth_service.dart';
+import 'services/encryption_service.dart';
+import 'providers/app_state.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
+  // Initialisation des services
+  final encryptionService = EncryptionService();
+  await encryptionService.initialize();
+
   // Configuration pour le réseau local
   await ReseauLocalService.configurerFirebaseLocal();
   await ReseauLocalService.configurerCache();
-  
+
   // Démarrer la surveillance du réseau
   ReseauLocalService.gererReconnexion(() {
     print('Reconnecté au réseau local');
   });
 
-  runApp(const MonApplication());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AppState()),
+      ],
+      child: const MonApplication(),
+    ),
+  );
 }
 
 class MonApplication extends StatelessWidget {
@@ -46,6 +59,7 @@ class _PageConnexionState extends State<PageConnexion> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final AuthService _authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -90,9 +104,23 @@ class _PageConnexionState extends State<PageConnexion> {
               ),
               const SizedBox(height: 24),
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-                    // TODO: Implémenter la logique de connexion
+                    try {
+                      final user = await _authService.connexionEmail(
+                        _emailController.text,
+                        _passwordController.text,
+                      );
+                      if (user != null) {
+                        if (!mounted) return;
+                        context.read<AppState>().initializeApp();
+                        // TODO: Naviguer vers la page d'accueil ou tableau de bord
+                      }
+                    } catch (e) {
+                      if (!mounted) return;
+                      ErrorHandler.handleError(context, e,
+                          customMessage: 'Erreur de connexion');
+                    }
                   }
                 },
                 child: const Text('Se connecter'),
